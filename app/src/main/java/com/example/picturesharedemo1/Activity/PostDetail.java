@@ -109,163 +109,174 @@ public class PostDetail extends AppCompatActivity {
         });
 
         like_pic.setOnClickListener(new View.OnClickListener() {
-         @Override
-         public void onClick(View v) {
-             String cur_objId = cur_post.getObjectId();
-             if ((like_sta.equals("0") && like_pic.getTag().equals(0)) || (like_pic.getTag().equals(2))) {
-                 Integer sum = cur_post.getLike_num();
-                 sum = sum + 1;
-                 likes.setText(sum.toString());
-                 like_pic.setImageResource(R.drawable.like_fill);
-                 cur_post.setLike_num(sum);
-                 Post po = new Post();
-                 po.increment("like_num");
-                 po.update(cur_objId, new UpdateListener() {
-                     @Override
-                     public void done(BmobException e) {
-                         if (e == null) {
+            @Override
+            public void onClick(View v) {
+                String cur_objId = cur_post.getObjectId();
+                if((like_sta.equals("0")&&like_pic.getTag().equals(0))||(like_pic.getTag().equals(2))){
+                    Integer sum = cur_post.getLike_num();
+                    sum = sum + 1;
+                    likes.setText(sum.toString());
+                    like_pic.setImageResource(R.drawable.like_fill);
+                    cur_post.setLike_num(sum);
+                    Post po = new Post();
+                    po.increment("like_num");
+                    po.update(cur_objId, new UpdateListener() {
+                        @Override
+                        public void done(BmobException e) {
+                            if(e==null){
 //                                Toast.makeText(PostDetail.this, "ok", Toast.LENGTH_SHORT).show();
-                         } else {
-                             Toast.makeText(PostDetail.this, "点赞数更新失败1", Toast.LENGTH_SHORT).show();
-                         }
-                     }
-                 });
-                 like_pic.setTag(1);
-                 Post like_po = new Post();
-                 like_po.setObjectId(cur_objId);
-                 User me = new User();
-                 me.setObjectId(now_user.getObjectId());
-                 BmobRelation relation = new BmobRelation();
-                 relation.add(like_po);
-                 me.setUser_like(relation);
-                 me.update(new UpdateListener() {
-                     @Override
-                     public void done(BmobException e) {
-                         if (e == null) {
-                             Toast.makeText(PostDetail.this, "点赞成功", Toast.LENGTH_SHORT).show();
-                         } else {
-                             Toast.makeText(PostDetail.this, "点赞失败", Toast.LENGTH_SHORT).show();
-                         }
-                     }
-                 });
-             } else {
-                 Integer sum = cur_post.getLike_num();
-                 sum = sum - 1;
-                 cur_post.setLike_num(sum);
-                 likes.setText(sum.toString());
-                 like_pic.setImageResource(R.drawable.like);
-                 Post po = new Post();
-                 po.increment("like_num", -1);
-                 po.update(cur_objId, new UpdateListener() {
-                     @Override
-                     public void done(BmobException e) {
-                         if (e == null) {
+                            }
+                            else{
+                                Toast.makeText(PostDetail.this, "点赞数更新失败1", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                    like_pic.setTag(1);
+                    Post like_po = new Post();
+                    like_po.setObjectId(cur_objId);
+                    User me = new User();
+                    me.setObjectId(now_user.getObjectId());
+                    BmobRelation relation = new BmobRelation();
+                    relation.add(like_po);
+                    me.setUser_like(relation);
+                    me.update(new UpdateListener() {
+                        @Override
+                        public void done(BmobException e) {
+                            if(e==null){
+                                Toast.makeText(PostDetail.this, "点赞成功", Toast.LENGTH_SHORT).show();
+                            }
+                            else{
+                                Toast.makeText(PostDetail.this, "点赞失败", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                }
+                else{
+                    Integer sum = cur_post.getLike_num();
+                    sum = sum - 1;
+                    cur_post.setLike_num(sum);
+                    likes.setText(sum.toString());
+                    like_pic.setImageResource(R.drawable.like);
+                    Post po = new Post();
+                    po.increment("like_num",-1);
+                    po.update(cur_objId, new UpdateListener() {
+                        @Override
+                        public void done(BmobException e) {
+                            if(e==null){
 //                                Toast.makeText(PostDetail.this, "ok2", Toast.LENGTH_SHORT).show();
-                         } else {
-                             Toast.makeText(PostDetail.this, "点赞数更新失败2", Toast.LENGTH_SHORT).show();
-                         }
-                     }
-                 });
-                 Post unlike_po = new Post();
-                 unlike_po.setObjectId(cur_objId);
-                 BmobRelation relation = new BmobRelation();
-                 relation.remove(unlike_po);
-                 User me = new User();
-                 me.setObjectId(now_user.getObjectId());
-                 me.setUser_like(relation);
-                 me.update(new UpdateListener() {
-                     @Override
-                     public void done(BmobException e) {
-                         if (e == null) {
-                             Toast.makeText(PostDetail.this, "取消点赞成功", Toast.LENGTH_SHORT).show();
-                         } else {
-                             Toast.makeText(PostDetail.this, "取消失败" + e, Toast.LENGTH_SHORT).show();
-                         }
-                     }
-                 });
-                 like_pic.setTag(2);
-             }
-         }
-     });
+                            }
+                            else{
+                                Toast.makeText(PostDetail.this, "点赞数更新失败2", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                    Post unlike_po = new Post();
+                    unlike_po.setObjectId(cur_objId);
+                    BmobRelation relation = new BmobRelation();
+                    relation.remove(unlike_po);
+                    User me = new User();
+                    me.setObjectId(now_user.getObjectId());
+                    me.setUser_like(relation);
+                    me.update(new UpdateListener() {
+                        @Override
+                        public void done(BmobException e) {
+                            if(e==null){
+                                Toast.makeText(PostDetail.this, "取消点赞成功", Toast.LENGTH_SHORT).show();
+                            }
+                            else{
+                                Toast.makeText(PostDetail.this, "取消失败"+e, Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                    like_pic.setTag(2);
+                }
+            }
+        });
         collect_pic.setOnClickListener(new View.OnClickListener() {
-         @Override
-         public void onClick(View v) {
-             String cur_objId = cur_post.getObjectId();
-             if ((collect_sta.equals("0") && collect_pic.getTag().equals(0)) || (collect_pic.getTag().equals(2))) {
-                 Integer sum = cur_post.getCollection_num();
-                 sum = sum + 1;
-                 collects.setText(sum.toString());
-                 collect_pic.setImageResource(R.drawable.collection_fill);
-                 cur_post.setCollection_num(sum);
-                 Post po = new Post();
-                 po.increment("collection_num");
-                 po.update(cur_objId, new UpdateListener() {
-                     @Override
-                     public void done(BmobException e) {
-                         if (e == null) {
+            @Override
+            public void onClick(View v) {
+                String cur_objId = cur_post.getObjectId();
+                if((collect_sta.equals("0")&&collect_pic.getTag().equals(0))||(collect_pic.getTag().equals(2))){
+                    Integer sum = cur_post.getCollection_num();
+                    Log.d("sum: ", "onClick: "+cur_post.getCollection_num());
+                    sum = sum + 1;
+                    collects.setText(sum.toString());
+                    collect_pic.setImageResource(R.drawable.collection_fill);
+                    cur_post.setCollection_num(sum);
+                    Post po = new Post();
+                    po.increment("collection_num");
+                    po.update(cur_objId, new UpdateListener() {
+                        @Override
+                        public void done(BmobException e) {
+                            if(e==null){
 //                                Toast.makeText(PostDetail.this, "ok", Toast.LENGTH_SHORT).show();
-                         } else {
-                             Toast.makeText(PostDetail.this, "收藏数更新失败1", Toast.LENGTH_SHORT).show();
-                         }
-                     }
-                 });
-                 collect_pic.setTag(1);
-                 Post collect_po = new Post();
-                 collect_po.setObjectId(cur_objId);
-                 User me = new User();
-                 me.setObjectId(now_user.getObjectId());
-                 BmobRelation relation = new BmobRelation();
-                 relation.add(collect_po);
-                 me.setUser_collect(relation);
-                 me.update(new UpdateListener() {
-                     @Override
-                     public void done(BmobException e) {
-                         if (e == null) {
-                             Toast.makeText(PostDetail.this, "收藏成功", Toast.LENGTH_SHORT).show();
-                         } else {
-                             Toast.makeText(PostDetail.this, "收藏失败", Toast.LENGTH_SHORT).show();
-                         }
-                     }
-                 });
-             } else {
-                 Integer sum = cur_post.getCollection_num();
-                 sum = sum - 1;
-                 cur_post.setCollection_num(sum);
-                 collects.setText(sum.toString());
-                 like_pic.setImageResource(R.drawable.collection);
-                 Post po = new Post();
-                 po.increment("collection_num", -1);
-                 po.update(cur_objId, new UpdateListener() {
-                     @Override
-                     public void done(BmobException e) {
-                         if (e == null) {
+                            }
+                            else{
+                                Toast.makeText(PostDetail.this, "收藏数更新失败1", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                    collect_pic.setTag(1);
+                    Post collect_po = new Post();
+                    collect_po.setObjectId(cur_objId);
+                    User me = new User();
+                    me.setObjectId(now_user.getObjectId());
+                    BmobRelation relation = new BmobRelation();
+                    relation.add(collect_po);
+                    me.setUser_collect(relation);
+                    me.update(new UpdateListener() {
+                        @Override
+                        public void done(BmobException e) {
+                            if(e==null){
+                                Toast.makeText(PostDetail.this, "收藏成功", Toast.LENGTH_SHORT).show();
+                            }
+                            else{
+                                Toast.makeText(PostDetail.this, "收藏失败", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                }
+                else{
+                    Integer sum = cur_post.getCollection_num();
+                    sum = sum - 1;
+                    cur_post.setCollection_num(sum);
+                    collects.setText(sum.toString());
+                    collect_pic.setImageResource(R.drawable.collection);
+                    Post po = new Post();
+                    po.increment("collection_num",-1);
+                    po.update(cur_objId, new UpdateListener() {
+                        @Override
+                        public void done(BmobException e) {
+                            if(e==null){
 //                                Toast.makeText(PostDetail.this, "ok2", Toast.LENGTH_SHORT).show();
-                         } else {
-                             Toast.makeText(PostDetail.this, "收藏数更新失败2", Toast.LENGTH_SHORT).show();
-                         }
-                     }
-                 });
-                 Post uncollect_po = new Post();
-                 uncollect_po.setObjectId(cur_objId);
-                 BmobRelation relation = new BmobRelation();
-                 relation.remove(uncollect_po);
-                 User me = new User();
-                 me.setObjectId(now_user.getObjectId());
-                 me.setUser_collect(relation);
-                 me.update(new UpdateListener() {
-                     @Override
-                     public void done(BmobException e) {
-                         if (e == null) {
-                             Toast.makeText(PostDetail.this, "取消收藏成功", Toast.LENGTH_SHORT).show();
-                         } else {
-                             Toast.makeText(PostDetail.this, "取消失败" + e, Toast.LENGTH_SHORT).show();
-                         }
-                     }
-                 });
-                 collect_pic.setTag(2);
-             }
-         }
-     });
+                            }
+                            else{
+                                Toast.makeText(PostDetail.this, "收藏数更新失败2", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                    Post uncollect_po = new Post();
+                    uncollect_po.setObjectId(cur_objId);
+                    BmobRelation relation = new BmobRelation();
+                    relation.remove(uncollect_po);
+                    User me = new User();
+                    me.setObjectId(now_user.getObjectId());
+                    me.setUser_collect(relation);
+                    me.update(new UpdateListener() {
+                        @Override
+                        public void done(BmobException e) {
+                            if(e==null){
+                                Toast.makeText(PostDetail.this, "取消收藏成功", Toast.LENGTH_SHORT).show();
+                            }
+                            else{
+                                Toast.makeText(PostDetail.this, "取消失败"+e, Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                    collect_pic.setTag(2);
+                }
+            }
+        });
         head_pic.setOnClickListener(new View.OnClickListener() {
          @Override
          public void onClick(View v) {
@@ -342,6 +353,7 @@ public class PostDetail extends AppCompatActivity {
                     @Override
                     public void done(Post post, BmobException e) {
                         if(e==null){
+                            cur_post = post;
                             Message msg = new Message();
                             Bundle bundle = new Bundle();
                             //有昵称则显示昵称，无昵称显示username
