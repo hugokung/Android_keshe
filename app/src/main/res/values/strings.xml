@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">PictureShareDemo</string>
+    <string name="save_pic">保存图片</string>
+</resources>

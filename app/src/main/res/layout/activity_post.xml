@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<LinearLayout android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <androidx.appcompat.widget.Toolbar
+    android:layout_height="?attr/actionBarSize"
+    android:layout_width="wrap_content"
+    android:id="@+id/toolbar">
+
+    <ImageView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:id="@+id/back"
+        android:background="?android:attr/selectableItemBackground"
+        android:src="@drawable/ic_arrow_back_black_24dp"/>
+
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:id="@+id/rec"
+        android:text="上传图片"
+        android:layout_marginLeft="15dp"
+        android:textSize="20sp"
+        android:textColor="@color/black"/>
+</androidx.appcompat.widget.Toolbar>
+
+
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:orientation="vertical">
+
+    <EditText
+        android:layout_height="150dp"
+        android:layout_width="match_parent"
+        android:id="@+id/pushcontent"
+        android:hint="分享新鲜事..."
+        android:gravity="top"
+        android:textStyle="bold"/>
+
+    <ImageView android:layout_height="80dp"
+        android:layout_width="80dp"
+        android:id="@+id/ima_choose_pic"
+        android:src="@drawable/ic_photo_camera_black_24dp"
+        android:layout_marginRight="10dp"/>
+
+    <ImageView android:layout_height="100dp"
+        android:layout_width="match_parent"
+        android:id="@+id/prePostpic"
+        android:paddingTop="15dp"/>
+
+</LinearLayout>
+<RelativeLayout
+    android:layout_height="62dp"
+    android:layout_width="match_parent"
+    android:paddingTop="15dp">
+
+    <Button
+        android:layout_height="50dp"
+        android:layout_width="match_parent"
+        android:id="@+id/push"
+        android:background="@drawable/shape"
+        android:text="发布"
+        android:textSize="18sp"
+        android:textColor="@color/gray_bg"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="12dp"/>
+
+</RelativeLayout>
+
+</LinearLayout>
