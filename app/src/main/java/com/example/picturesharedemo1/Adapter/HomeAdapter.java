@@ -85,6 +85,21 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             recyclerViewHolder.like_pic.setImageResource(R.drawable.like_fill);
             recyclerViewHolder.collect_pic.setImageResource(R.drawable.collection_fill);
         }
+
+        //以下两个if -- else if 是解决取消当前项目的点赞收藏后，当再次滑动到该项目时还是显示了点赞收藏的状态的bug
+        if(recyclerViewHolder.like_pic.getTag().equals(2)){
+            recyclerViewHolder.like_pic.setImageResource(R.drawable.like);
+        }
+        else if(recyclerViewHolder.like_pic.getTag().equals(1)){
+            recyclerViewHolder.like_pic.setImageResource(R.drawable.like_fill);
+        }
+        if(recyclerViewHolder.collect_pic.getTag().equals(2)){
+            recyclerViewHolder.collect_pic.setImageResource(R.drawable.collection);
+        }
+        else if(recyclerViewHolder.collect_pic.getTag().equals(1)){
+            recyclerViewHolder.collect_pic.setImageResource(R.drawable.collection_fill);
+        }
+
         BmobFile post_img = post.getImage();
         String post_img_url = post_img.getUrl();
         BmobFile head_img = post.getAuthor().getAvatar();
