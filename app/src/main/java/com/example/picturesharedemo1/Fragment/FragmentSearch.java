@@ -45,18 +45,18 @@ public class FragmentSearch extends Fragment {
         @Override
         public void handleMessage(Message msg){
 
-            if(msg.what == 0){
+            if(msg.what == 0){  //全部动态的信息查询成功
                 data.clear();
                 data = (List<Post>) msg.obj;
             }
-            else if(msg.what == 2){
+            else if(msg.what == 2){     //用户的点赞信息查询成功
                 like_data.clear();
                 like_data = (List<Post>) msg.obj;
             }
-            else if(msg.what == 1){
+            else if(msg.what == 1){     //用户的收藏信息查询成功
                 collect_data.clear();
                 collect_data = (List<Post>) msg.obj;
-                findAdapter2 = new FindAdapter(getActivity(),data,like_data,collect_data);
+                findAdapter2 = new FindAdapter(getActivity(),data,like_data,collect_data);  //所有需要的信息都查询成功可以加载页面了
                 rv.setLayoutManager(new LinearLayoutManager(getActivity()));
                 rv.setAdapter(findAdapter2);
             }

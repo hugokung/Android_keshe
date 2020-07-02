@@ -68,19 +68,20 @@ public class FragmentHome extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        iniView();
-        Bmob.initialize(getActivity(),"8369765908b5b24d951f7a13eb151240");
-        Refresh();
+        iniView();  //控件绑定
+        Bmob.initialize(getActivity(),"8369765908b5b24d951f7a13eb151240");  //云后端初始化
+        Refresh();      //第一次登陆到首页页面时自动进行一次刷新
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(getActivity(), PostActivity.class));
             }
         });
+        //下拉刷新控件的初始化
         srlayout.setColorSchemeResources(android.R.color.holo_green_light,android.R.color.holo_red_light,android.R.color.holo_blue_light);
         srlayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public void onRefresh() {
+            public void onRefresh() {//下拉刷新
                 Refresh();
             }
         });
@@ -92,7 +93,7 @@ public class FragmentHome extends Fragment {
         BmobUser this_user = BmobUser.getCurrentUser(BmobUser.class);
         User user = new User();
         user.setObjectId(this_user.getObjectId());
-        query_follow.addWhereRelatedTo("focusId",new BmobPointer(user));
+        query_follow.addWhereRelatedTo("focusId",new BmobPointer(user));    //构建多对多关系的查询
         query_follow.findObjects(new FindListener<User>() {
             @Override
             public void done(List<User> list, BmobException e) {
@@ -100,8 +101,7 @@ public class FragmentHome extends Fragment {
                     Integer num = list.size();
                     focus_data.clear();
 //                    Toast.makeText(getActivity(), "success!"+num.toString(), Toast.LENGTH_SHORT).show();
-                    for(User t:list){
-
+                    for(User t:list){       //保存查询到的关注的人的id
                         focus_data.add(t.getObjectId());
                     }
                     focus_data.add(this_user.getObjectId());
@@ -110,7 +110,7 @@ public class FragmentHome extends Fragment {
                         srlayout.setRefreshing(false);
                     }
                     else {
-                        init_like_list();     //查询关注的人的动态
+                        init_like_list();     //查询自己的点赞的动态信息
                     }
                 }
                 else {
@@ -127,6 +127,7 @@ public class FragmentHome extends Fragment {
         add = getActivity().findViewById(R.id.add);
     }
     private void search_post(){
+        /*根据刚刚查询到的关注的人的id，构建数组查询，查询他们的发布信息*/
         BmobQuery<User> innerQuery = new BmobQuery<User>();
         innerQuery.addWhereContainedIn("objectId",focus_data);
         BmobQuery<Post> query = new BmobQuery<Post>();
@@ -155,7 +156,7 @@ public class FragmentHome extends Fragment {
         });
     }
     private void init_like_list(){
-
+        //查询点赞信息
         BmobUser this_user = BmobUser.getCurrentUser(BmobUser.class);
         BmobQuery<Post> query_like = new BmobQuery<Post>();
         User me = new User();
@@ -174,6 +175,7 @@ public class FragmentHome extends Fragment {
                 }
             }
         });
+        //查询用户的收藏的信息
         BmobQuery<Post> query_collect = new BmobQuery<>();
         query_collect.addWhereRelatedTo("user_collect",new BmobPointer(me));
         query_collect.findObjects(new FindListener<Post>() {
@@ -183,7 +185,7 @@ public class FragmentHome extends Fragment {
                     collect_data.clear();
                     collect_data = list;
 //                    Toast.makeText(getActivity(), "获取收藏信息成功", Toast.LENGTH_SHORT).show();
-                    search_post();
+                    search_post();      //当前用户的点赞收藏信息都查询完成后再查询用户关注的人的动态（这样主要是因为查询都是异步执行的）
                 }
                 else{
                     Toast.makeText(getActivity(), "获取收藏信息失败"+e, Toast.LENGTH_SHORT).show();

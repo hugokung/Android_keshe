@@ -37,7 +37,7 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private List<Post> like_data;
     private List<Post> collect_data;
     User now_user = BmobUser.getCurrentUser(User.class);
-
+    //构造方法，分别传入上下文，动态信息，用户点赞的动态，收藏的动态
     public HomeAdapter(Context context, List<Post> data, List<Post> like_data, List<Post> collect_data){
         this.context = context;
         this.data = data;
@@ -73,30 +73,30 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         Integer pos = recyclerViewHolder.getAdapterPosition();
         Integer type = getItemViewType(pos);
         if(type == 0) Log.i("type",""+type.toString()+" "+post.getObjectId());
-        if(type==3){
+        if(type==3){    //当前动态用户在最近一次刷新的时候是点赞的
             Log.d("obj_id",""+post.getObjectId());
             recyclerViewHolder.like_pic.setImageResource(R.drawable.like_fill);
         }
-        if(type==2){
+        if(type==2){    //当前动态用户在最近一次刷新的时候是收藏的
             Log.d("obj_id",""+post.getObjectId());
             recyclerViewHolder.collect_pic.setImageResource(R.drawable.collection_fill);
         }
-        if(type==1){
+        if(type==1){    //当前动态用户在最近一次刷新的时候是点赞和收藏过的
             recyclerViewHolder.like_pic.setImageResource(R.drawable.like_fill);
             recyclerViewHolder.collect_pic.setImageResource(R.drawable.collection_fill);
         }
 
         //以下两个if -- else if 是解决取消当前项目的点赞收藏后，当再次滑动到该项目时还是显示了点赞收藏的状态的bug
-        if(recyclerViewHolder.like_pic.getTag().equals(2)){
+        if(recyclerViewHolder.like_pic.getTag().equals(2)){     //用户取消过了点赞
             recyclerViewHolder.like_pic.setImageResource(R.drawable.like);
         }
-        else if(recyclerViewHolder.like_pic.getTag().equals(1)){
+        else if(recyclerViewHolder.like_pic.getTag().equals(1)){    //之前没有赞过，后面又点赞了
             recyclerViewHolder.like_pic.setImageResource(R.drawable.like_fill);
         }
-        if(recyclerViewHolder.collect_pic.getTag().equals(2)){
+        if(recyclerViewHolder.collect_pic.getTag().equals(2)){      //用户取消过收藏
             recyclerViewHolder.collect_pic.setImageResource(R.drawable.collection);
         }
-        else if(recyclerViewHolder.collect_pic.getTag().equals(1)){
+        else if(recyclerViewHolder.collect_pic.getTag().equals(1)){     //之前没有收藏过，后面又收藏了
             recyclerViewHolder.collect_pic.setImageResource(R.drawable.collection_fill);
         }
 
@@ -125,13 +125,14 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 int position = recyclerViewHolder.getAdapterPosition();
                 Post cur = data.get(position);
                 String cur_objId=data.get(position).getObjectId();
+                //如果当前动态是之前没有点赞过且tag是0或者取消过点赞（即tag为2）
                 if((!judge_like(cur_objId)&&recyclerViewHolder.like_pic.getTag().equals(0))||recyclerViewHolder.like_pic.getTag().equals(2)){//当前动态用户没点过赞
                     Integer sum = cur.getLike_num();
-                    sum = sum + 1;
-                    cur.setLike_num(sum);
+                    sum = sum + 1;  //点赞数加一
+                    cur.setLike_num(sum);   //保存新的点赞数
                     recyclerViewHolder.likes.setText(sum.toString());
                     Post po = new Post();
-                    po.increment("like_num");
+                    po.increment("like_num");   //数据库的修改
                     po.update(cur_objId, new UpdateListener() {
                         @Override
                         public void done(BmobException e) {
@@ -143,9 +144,10 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             }
                         }
                     });
-                    recyclerViewHolder.like_pic.setTag(1);
+                    recyclerViewHolder.like_pic.setTag(1);  //改变状态
                     recyclerViewHolder.like_pic.setImageResource(R.drawable.like_fill);
                     Log.i("obj_id_click",""+cur_objId);
+                    /*下面是修改用户表点赞字段的数据，新增点赞的动态*/
                     Post like_po = new Post();
                     like_po.setObjectId(cur_objId);
                     User me = new User();
@@ -172,7 +174,7 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         cur.setLike_num(sum);
                         recyclerViewHolder.likes.setText(sum.toString());
                         Post po = new Post();
-                        po.increment("like_num",-1);
+                        po.increment("like_num",-1);    //动态表的对应行的点赞数减一
                         po.update(cur_objId, new UpdateListener() {
                             @Override
                             public void done(BmobException e) {
@@ -186,6 +188,7 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         });
                     }
                     recyclerViewHolder.like_pic.setImageResource(R.drawable.like);
+                    /*用户表的点赞字段的减少该动态*/
                     Post unlike_po = new Post();
                     unlike_po.setObjectId(cur_objId);
                     BmobRelation relation = new BmobRelation();
@@ -204,10 +207,11 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             }
                         }
                     });
-                    recyclerViewHolder.like_pic.setTag(2);
+                    recyclerViewHolder.like_pic.setTag(2);  //状态设置
                 }
             }
         });
+        //收藏功能的逻辑和点赞的一样
         recyclerViewHolder.collect_pic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -296,6 +300,7 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 }
             }
         });
+        //点击图片即进入详情页面
         recyclerViewHolder.post_pic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -304,17 +309,17 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     Intent in = new Intent(context, PostDetail.class);
                     in.putExtra("id",data.get(position).getObjectId());
                     if((!judge_like(data.get(position).getObjectId())&&recyclerViewHolder.like_pic.getTag().equals(0))||recyclerViewHolder.like_pic.getTag().equals(2)){
-                        in.putExtra("like_sta","0");
+                        in.putExtra("like_sta","0");    //当前动态没有点赞过
                     }
                     else in.putExtra("like_sta","1");
                     if((!judge_collect(data.get(position).getObjectId())&&recyclerViewHolder.collect_pic.getTag().equals(0))||recyclerViewHolder.collect_pic.getTag().equals(2)){
-                        in.putExtra("collect_sta","0");
+                        in.putExtra("collect_sta","0");     //当前动态没有收藏过
                     }
                     else in.putExtra("collect_sta","1");
                     context.startActivity(in);
                 }
                 else{
-                    Toast.makeText(context, "请登录", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "请登录", Toast.LENGTH_SHORT).show();  //提示登陆
                     context.startActivity(new Intent(context, LoginActivity.class));
                 }
             }
@@ -337,7 +342,7 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     @Override
-    public int getItemViewType(int position){
+    public int getItemViewType(int position){   //判断这些动态初始时是用户点赞过还是收藏过
         String cur_id = data.get(position).getObjectId();
         if(judge_like(cur_id)&&judge_collect(cur_id)){
             return 1;
@@ -366,11 +371,11 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             collects = view.findViewById(R.id.collection_sum);
             like_pic = view.findViewById(R.id.user_like);
             collect_pic = view.findViewById(R.id.user_collection);
-            like_pic.setTag(0);
+            like_pic.setTag(0);     //初始化tag为0
             collect_pic.setTag(0);
         }
     }
-    private Boolean judge_like(String str){
+    private Boolean judge_like(String str){     //判断当前动态的id是不是用户点赞过的id
         for (Post t: like_data){
             String tmp = t.getObjectId();
             if(tmp.equals(str)){
