@@ -105,6 +105,7 @@ public class FragmentHome extends Fragment {
                         focus_data.add(t.getObjectId());
                     }
                     focus_data.add(this_user.getObjectId());
+                    num = focus_data.size();
                     if(num==0){
                         Toast.makeText(getActivity(), "你还没有关注的人喔！", Toast.LENGTH_SHORT).show();
                         srlayout.setRefreshing(false);
